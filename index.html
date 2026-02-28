@@ -52,10 +52,12 @@
 
   /* フルページコンテナ */
   .fp-container {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-  }
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      height: 100vh;
+      height: 100dvh; 
+      overflow: hidden;
+    }
 
   /* 各セクション共通 */
   .fp-section {
@@ -584,13 +586,13 @@
       <!-- NEW: ブランドコンセプト -->
       <div class="brand-concept">
         <p class="concept-text">
-          <span class="concept-highlight">Lumea</span>（ルミア）は、ラテン語の <em>lumen</em>（光）と、<br class="sp-hide">
+          <span class="concept-highlight">Lumea</span>（ル・メア）は、ラテン語の <em>lumen</em>（光）と、<br class="sp-hide">
           英単語の <em>idea</em>（発想）を掛け合わせた造語です。<br>
           ビジネスの原点にある「アイデア」に光を当て、鮮明な「カタチ」として社会へ届ける。<br>
           その意志を、名前に込めています。<br>
         </p>
       </div>
-      <div class="services-grid">        
+      <div class="services-grid">
         <article class="service-card">
           <span class="service-icon" aria-hidden="true">✦</span>
           <!-- NEW: キャッチコピー -->
@@ -619,8 +621,8 @@
           <span class="service-catch">届けるべき相手に、確実に。</span>
           <h3 class="service-name">コンテンツ戦略</h3>
           <p class="service-desc">
-            ターゲット分析・コピーライティング・SNS戦略を組み合わせ、
-            届けるべき相手に届くコンテンツを制作します。
+            ターゲット分析からコピーライティング、SNS戦略までを統合。
+            ユーザーの共感を呼び起こし、次の行動へと導くコミュニケーションを設計します。
           </p>
         </article>
       </div>
@@ -687,9 +689,14 @@
   }
 
   // 切り替え処理
-  function goTo(index) {
+  function goTo(index, pushHistory = true) {
     if (isAnimating || index === current) return;
     if (index < 0 || index >= sections.length) return;
+    
+    // 履歴に追加する場合のみ実行（戻るボタンで戻った時は追加しない）
+    if (pushHistory) {
+      history.pushState({ section: index }, '', `#section-${index}`);
+    }
 
     isAnimating = true;
     const prev = current;
@@ -723,9 +730,19 @@
     btnNext.disabled = current === sections.length - 1;
   }
 
+    window.addEventListener('popstate', (e) => {
+    // 履歴に状態があればそこへ、なければトップ(0)へ
+    if (e.state && typeof e.state.section === 'number') {
+      goTo(e.state.section, false); // false = 新たな履歴を追加せずに移動
+    } else {
+      goTo(0, false);
+    }
+  });
+
   // イベントリスナー
   btnPrev.addEventListener('click', () => goTo(current - 1));
   btnNext.addEventListener('click', () => goTo(current + 1));
+
 
   document.addEventListener('click', (e) => {
     const target = e.target.closest('[data-goto]');
@@ -780,11 +797,24 @@
   });
 
   function init() {
+    // URLに #section-2 などがあればその番号を取得
+    let initialIndex = 0;
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#section-')) {
+      const idx = parseInt(hash.replace('#section-', ''), 10);
+      if (!isNaN(idx) && idx >= 0 && idx < sections.length) {
+        initialIndex = idx;
+      }
+    }
+    
+    current = initialIndex;
+
     sections.forEach((sec, i) => {
-      setStyle(sec, i === 0 ? 'translateY(0%)' : 'translateY(100%)', i === 0 ? '1' : '0', false);
+      setStyle(sec, i === current ? 'translateY(0%)' : 'translateY(100%)', i === current ? '1' : '0', false);
     });
     updateUI();
   }
+  
   init();
 </script>
 </body>
