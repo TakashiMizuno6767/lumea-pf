@@ -358,7 +358,7 @@
       #1 サービスセクション
   =========================== */
   #services {
-    background: radial-gradient(circle at 20% 50%, #1e2d0a 0%, var(--color-bg) 60%);
+    background: radial-gradient(circle at 20% 50%, rgba(15, 118, 110, 0.15) 0%, var(--color-bg) 60%);
   }
   .section-label {
     font-size: 0.75rem;
@@ -440,15 +440,6 @@
     margin-bottom: 8px;
     letter-spacing: 0.05em;
   }
-  @media (max-width: 768px) {
-    .sp-hide { display: none; }
-    .brand-concept {
-      padding-left: 16px;
-      margin-bottom: 40px;
-      border-left-width: 2px;
-    }
-    .concept-text { font-size: 0.95rem; }
-  }
   /* ===========================
       #2 CTAセクション
   =========================== */
@@ -518,6 +509,13 @@
     .nav-toggle { display: block; }
     .fp-dots { display: none; }
     .cta-inner { padding: 48px 24px; }
+    .sp-hide { display: none; }
+    .brand-concept {
+      padding-left: 16px;
+      margin-bottom: 40px;
+      border-left-width: 2px;
+    }
+    .concept-text { font-size: 0.95rem; }
   }
   @media (min-width: 769px) and (max-width: 1024px) {
     .services-grid { grid-template-columns: repeat(2, 1fr); }
